@@ -9,7 +9,7 @@ Dokumentasi lengkap pengembangan Sistem Koperasi Kantor Desa yang mencakup arsit
 - Backend berbasis `Go 1.22 + Gin + GORM + MySQL`.
 
 ## Arsitektur & Tech Stack
-- Frontend: `Vue 3`, `Vite`, `Pinia`, `shadcn-vue`
+- Frontend: `Vue 3`, `Vite`, `Pinia`, `shadcn-vue`, `Axios`
 - Backend: `Go 1.22`, `Gin`, `GORM`
 - Database: `MySQL`
 - Autentikasi: `JWT` (Bearer Token)
@@ -128,6 +128,69 @@ Catatan: Nama tabel dapat disesuaikan. Backend menggunakan GORM sehingga migrasi
   - `GET /api/laporan/simpanan?periode=...`
   - `GET /api/laporan/pinjaman?status=...`
   - `GET /api/laporan/kas?periode=...`
+
+## HTTP Client (Axios)
+Untuk komunikasi HTTP di frontend, proyek ini menggunakan `Axios` sebagai client.
+
+### Instalasi
+- Jalankan perintah berikut di folder `web`:
+
+```bash
+cd web
+npm install axios
+```
+
+### Konfigurasi Instance
+Buat instance Axios agar konsisten menggunakan `VITE_API_BASE_URL` dan otomatis menambahkan JWT (jika tersedia).
+
+```ts
+// web/src/lib/axios.ts
+import axios from 'axios';
+
+const api = axios.create({
+  baseURL: import.meta.env.VITE_API_BASE_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+// Tambahkan Authorization header jika token tersimpan
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
+export default api;
+```
+
+### Contoh Penggunaan
+- Login dan simpan token:
+
+```ts
+// web/src/services/auth.ts
+import api from '@/lib/axios';
+
+export async function login(email: string, password: string) {
+  const { data } = await api.post('/api/auth/login', { email, password });
+  localStorage.setItem('token', data.token);
+  return data;
+}
+```
+
+- Memuat daftar anggota:
+
+```ts
+// web/src/services/anggota.ts
+import api from '@/lib/axios';
+
+export async function getAnggota() {
+  const { data } = await api.get('/api/anggota');
+  return data;
+}
+```
 
 ## Setup Lingkungan – Development
 ### Prasyarat
