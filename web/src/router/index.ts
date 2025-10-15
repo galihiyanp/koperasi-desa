@@ -3,6 +3,7 @@ import type { RouteRecordRaw } from 'vue-router'
 
 const Dashboard = () => import('@/pages/Dashboard.vue')
 const Placeholder = () => import('@/pages/Placeholder.vue')
+const UsersSecurity = () => import('@/pages/UsersSecurity.vue')
 
 const routes: RouteRecordRaw[] = [
   { path: '/', redirect: '/dashboard' },
@@ -15,7 +16,7 @@ const routes: RouteRecordRaw[] = [
   { name: 'kas', path: '/kas', component: Placeholder },
   { name: 'laporan', path: '/laporan', component: Placeholder },
   { name: 'pengaturan', path: '/pengaturan', component: Placeholder },
-  { name: 'pengguna', path: '/pengguna', component: Placeholder },
+  { name: 'pengguna', path: '/pengguna', component: UsersSecurity },
   { name: 'bantuan', path: '/bantuan', component: Placeholder },
 ]
 
