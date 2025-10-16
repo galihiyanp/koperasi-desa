@@ -31,6 +31,9 @@ func setupRouter(db *gorm.DB) *gin.Engine {
         c.JSON(200, gin.H{"status": "ok"})
     })
 
+    // Static files untuk dokumen upload
+    r.Static("/uploads", "./uploads")
+
     // Register routes
     routes.RegisterRoutes(r, db)
     return r

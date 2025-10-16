@@ -4,11 +4,12 @@ import type { RouteRecordRaw } from 'vue-router'
 const Dashboard = () => import('@/pages/Dashboard.vue')
 const Placeholder = () => import('@/pages/Placeholder.vue')
 const UsersSecurity = () => import('@/pages/UsersSecurity.vue')
+const Keanggotaan = () => import('@/pages/Keanggotaan.vue')
 
 const routes: RouteRecordRaw[] = [
   { path: '/', redirect: '/dashboard' },
   { name: 'dashboard', path: '/dashboard', component: Dashboard },
-  { name: 'keanggotaan', path: '/keanggotaan', component: Placeholder },
+  { name: 'keanggotaan', path: '/keanggotaan', component: Keanggotaan },
   { name: 'simpanan', path: '/simpanan', component: Placeholder },
   { name: 'penarikan', path: '/penarikan', component: Placeholder },
   { name: 'pinjaman', path: '/pinjaman', component: Placeholder },
