@@ -325,26 +325,3 @@ onMounted(() => { fetchAnggota() })
     </div>
   </div>
 </template>
-
-<style scoped>
-.page-title { font-size: 22px; font-weight: 600; margin-bottom: 12px; }
-.actions-row { display: flex; gap: 8px; }
-.form-row { display: grid; grid-template-columns: 160px 1fr; gap: 8px; align-items: center; margin-bottom: 10px; }
-.label { font-size: 14px; color: #374151; }
-.input { padding: 8px 10px; border-radius: 8px; border: 1px solid #e5e7eb; font-size: 14px; }
-.form-actions { display: flex; gap: 8px; margin-top: 6px; }
-.table { width: 100%; border-collapse: collapse; }
-.table th, .table td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #f3f4f6; }
-.table thead th { font-weight: 600; color: #374151; background: #f9fafb; }
-.table-actions { display: flex; gap: 8px; }
-.pagination { display: flex; gap: 12px; align-items: center; margin-top: 12px; }
-.btn { padding: 6px 12px; border-radius: 6px; font-size: 13px; border: 1px solid #e5e7eb; cursor: pointer; }
-.btn-primary { background: #1d4ed8; color: #fff; border-color: #1d4ed8; }
-.btn-primary:hover { background: #1e40af; border-color: #1e40af; }
-.btn-secondary { background: #f3f4f6; }
-.btn-secondary:hover { background: #e5e7eb; }
-.status-badge { display: inline-block; font-size: 12px; padding: 2px 8px; border-radius: 999px; border: 1px solid #e5e7eb; text-transform: capitalize; }
-.status-badge.pending { background: #fff7ed; color: #c2410c; border-color: #fed7aa; }
-.status-badge.verified { background: #eff6ff; color: #1d4ed8; border-color: #bfdbfe; }
-.status-badge.active { background: #ecfdf5; color: #047857; border-color: #a7f3d0; }
-</style>

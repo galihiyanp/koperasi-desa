@@ -33,7 +33,9 @@ const appName = import.meta.env.VITE_APP_NAME || 'Sistem Koperasi Kantor Desa'
 
       <!-- Content -->
       <main class="content">
-        <RouterView />
+        <transition name="fade-slide" mode="out-in">
+          <RouterView />
+        </transition>
       </main>
     </div>
   </div>

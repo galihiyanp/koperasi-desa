@@ -11,7 +11,7 @@ onMounted(() => {
 
 <template>
   <div class="dashboard">
-    <h1 class="text-2xl font-semibold mb-6">Dashboard</h1>
+    <h1 class="page-title">Dashboard</h1>
 
     <!-- Metrics cards -->
     <div class="metrics">
@@ -49,19 +49,19 @@ onMounted(() => {
     </div>
 
     <!-- Tasks / Notifications -->
-    <div class="mt-8 card">
+    <div class="card" style="margin-top: 24px;">
       <div class="card-header">Notifikasi & Tugas</div>
       <div class="card-content">
-        <ul class="space-y-3">
-          <li v-for="(t, i) in dashboard.overview.tasks" :key="i" class="flex items-start justify-between">
+        <ul>
+          <li v-for="(t, i) in dashboard.overview.tasks" :key="i" style="display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:12px;">
             <div>
-              <p class="font-medium">{{ t.title }}</p>
-              <p class="text-sm text-gray-500">{{ t.description }}</p>
+              <p style="font-weight:600;">{{ t.title }}</p>
+              <p class="muted" style="font-size: 0.9rem;">{{ t.description }}</p>
             </div>
             <span class="badge">{{ t.badge }}</span>
           </li>
         </ul>
-        <div v-if="!dashboard.overview.tasks?.length" class="text-sm text-gray-500">Tidak ada notifikasi</div>
+        <div v-if="!dashboard.overview.tasks?.length" class="muted">Tidak ada notifikasi</div>
       </div>
     </div>
   </div>
