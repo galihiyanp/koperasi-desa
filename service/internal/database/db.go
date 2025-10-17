@@ -33,7 +33,16 @@ func InitDB() *gorm.DB {
     }
 
     // Migrations
-    if err := db.AutoMigrate(&models.User{}, &models.Anggota{}, &models.AnggotaDocument{}, &models.AnggotaActivity{}); err != nil {
+    if err := db.AutoMigrate(
+        &models.User{},
+        &models.Anggota{},
+        &models.AnggotaDocument{},
+        &models.AnggotaActivity{},
+        &models.Simpanan{},
+        &models.Pinjaman{},
+        &models.Angsuran{},
+        &models.Setting{},
+    ); err != nil {
         log.Fatalf("failed to migrate: %v", err)
     }
 

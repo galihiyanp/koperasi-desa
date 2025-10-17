@@ -49,6 +49,14 @@ Dokumentasi lengkap pengembangan Sistem Koperasi Kantor Desa yang mencakup arsit
   - Penarikan
   - Rekap Saldo Simpanan per Anggota
   - Riwayat Transaksi Simpanan
+- Angsuran
+  - Daftar Angsuran (per anggota atau semua pinjaman)
+  - Jadwal Angsuran (lihat rincian pokok, bunga, denda, tanggal jatuh tempo)
+  - Pembayaran Angsuran (input bayar, otomatis hitung denda jika terlambat)
+  - Pelunasan Dipercepat (hitung pelunasan total, update status pinjaman)
+  - Riwayat Bayar (semua cicilan yang sudah dibayar)
+  - Tunggakan & Denda (daftar yang belum bayar, nominal tunggakan, denda)
+  - Notifikasi Jatuh Tempo (opsional, via WhatsApp/Email)
 - Pinjaman
   - Pengajuan Pinjaman (nominal, tenor, bunga)
   - Analisis & Persetujuan/Verifikasi

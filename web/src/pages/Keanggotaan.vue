@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
 import api from '@/lib/axios'
+import { useSelectionStore } from '@/stores/selection'
+import { useRouter } from 'vue-router'
 
 type Anggota = {
   id: number
@@ -42,6 +44,9 @@ const form = reactive<{ id?: number; nomor_anggota: string; nama: string; nik: s
 })
 
 const selected = ref<Anggota | null>(null)
+// Integrasi store global untuk sinkronisasi pilihan anggota
+const selection = useSelectionStore()
+const router = useRouter()
 const activities = ref<Activity[]>([])
 const documents = ref<Document[]>([])
 
@@ -63,6 +68,12 @@ async function fetchAnggota() {
     const data = res.data?.data ?? []
     anggota.value = data
     hasNext.value = (data.length ?? 0) >= limit.value
+    // Preselect berdasarkan store jika ada
+    const pre = selection.selectedAnggotaId
+    if (pre != null) {
+      const found = anggota.value.find(x => x.id === pre) || null
+      if (found) selected.value = found
+    }
   } catch (e: any) {
     error.value = e?.message ?? 'Gagal memuat data anggota'
   } finally {
@@ -141,6 +152,8 @@ async function submitForm() {
 
 async function viewProfile(a: Anggota) {
   selected.value = a
+  // Sinkronkan pilihan anggota ke store global
+  selection.setAnggota(a.id)
   try {
     const res = await api.get(`/api/anggota/${a.id}`)
     const data = res.data?.data ?? a
@@ -256,7 +269,7 @@ onMounted(() => { fetchAnggota() })
               <th>NIK</th>
               <th>Status</th>
               <th>Gabung</th>
-              <th style="width: 280px;">Aksi</th>
+              <th style="width: 360px;">Aksi</th>
             </tr>
           </thead>
           <tbody>
@@ -269,11 +282,13 @@ onMounted(() => { fetchAnggota() })
               </td>
               <td>{{ a.tanggal_gabung || '-' }}</td>
               <td>
-                <div class="table-actions">
+                <div class="table-actions" style="display:flex; gap:6px; flex-wrap:wrap;">
                   <button class="btn btn-secondary" @click="openEdit(a)">Ubah</button>
                   <button class="btn btn-secondary" @click="viewProfile(a)">Profil</button>
                   <button class="btn btn-primary" :disabled="a.status === 'verified' || a.status === 'active'" @click="selected = a; verifySelected()">Verifikasi</button>
                   <button class="btn btn-primary" :disabled="a.status === 'active'" @click="selected = a; activateSelected()">Aktivasi</button>
+                  <button class="btn btn-light" @click="selection.setAnggota(a.id); router.push('/pinjaman')">Pinjaman</button>
+                  <button class="btn btn-light" @click="selection.setAnggota(a.id); router.push('/angsuran')">Angsuran</button>
                 </div>
               </td>
             </tr>

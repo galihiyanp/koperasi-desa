@@ -10,6 +10,10 @@ import (
 func RegisterRoutes(r *gin.Engine, db *gorm.DB) {
     uc := controllers.NewUserController(db)
     ac := controllers.NewAnggotaController(db)
+    sc := controllers.NewSimpananController(db)
+    pc := controllers.NewPinjamanController(db)
+    ic := controllers.NewAngsuranController(db)
+    stc := controllers.NewSettingsController(db)
 
     api := r.Group("/api")
     {
@@ -28,5 +32,25 @@ func RegisterRoutes(r *gin.Engine, db *gorm.DB) {
         api.POST("/anggota/:id/activate", ac.ActivateAnggota)
         api.POST("/anggota/:id/documents", ac.UploadDocuments)
         api.GET("/anggota/:id/documents", ac.ListDocuments)
+
+        // Simpanan routes
+        api.GET("/simpanan", sc.ListSimpanan)
+        api.POST("/simpanan/setoran", sc.Setoran)
+        api.POST("/simpanan/penarikan", sc.Penarikan)
+
+        // Pinjaman routes
+        api.GET("/pinjaman", pc.ListPinjaman)
+        api.POST("/pinjaman/pengajuan", pc.Pengajuan)
+        api.POST("/pinjaman/verifikasi", pc.Verifikasi)
+        api.POST("/pinjaman/pencairan", pc.Pencairan)
+
+        // Angsuran routes
+        api.GET("/angsuran", ic.ListAngsuran)
+        api.POST("/angsuran/bayar", ic.Bayar)
+
+        // Settings routes
+        api.GET("/settings", stc.ListSettings)
+        api.GET("/settings/:key", stc.GetSetting)
+        api.PUT("/settings/:key", stc.PutSetting)
     }
 }
