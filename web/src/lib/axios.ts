@@ -1,7 +1,12 @@
 import axios from 'axios'
 
+// Dev: gunakan proxy Vite (base relatif '/')
+// Prod: gunakan VITE_API_BASE_URL, fallback ke 8080 jika tidak diset
+const isDev = import.meta.env.DEV
+const baseURL = isDev ? '/' : (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8080')
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL,
+  baseURL,
   headers: {
     'Content-Type': 'application/json',
   },

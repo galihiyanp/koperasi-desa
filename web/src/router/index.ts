@@ -18,6 +18,8 @@ const routes: RouteRecordRaw[] = [
   { path: '/', redirect: '/dashboard' },
   { name: 'dashboard', path: '/dashboard', component: Dashboard },
   { name: 'keanggotaan', path: '/keanggotaan', component: Keanggotaan },
+  // Rute halaman profil anggota menggunakan komponen yang sama
+  { name: 'keanggotaan-profil', path: '/keanggotaan/profil/:id', component: Keanggotaan },
   { name: 'simpanan', path: '/simpanan', component: Simpanan },
   { name: 'penarikan', path: '/penarikan', component: Penarikan },
   { name: 'pinjaman', path: '/pinjaman', component: Pinjaman },
