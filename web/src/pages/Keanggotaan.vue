@@ -451,13 +451,11 @@ watch(() => isProfilePage.value, (isProfile) => {
                   <td>{{ a.tanggal_gabung || '-' }}</td>
                   <td>
                     <div class="table-actions" style="display:flex; gap:6px; flex-wrap:wrap;">
-                      <button class="btn btn-secondary" @click="openEdit(a)">Ubah</button>
-                      <button class="btn btn-secondary" @click="openProfileModal(a.id)">Profil</button>
-                      <button class="btn btn-primary" :disabled="a.status === 'verified' || a.status === 'active'" @click="selected = a; verifySelected()">Verifikasi</button>
-                      <button class="btn btn-primary" :disabled="a.status === 'active'" @click="selected = a; activateSelected()">Aktivasi</button>
-                      <button class="btn btn-light" @click="selection.setAnggota(a.id); router.push('/pinjaman')">Pinjaman</button>
-                      <button class="btn btn-light" @click="selection.setAnggota(a.id); router.push('/angsuran')">Angsuran</button>
-                    </div>
+          <button class="btn btn-secondary" @click="openEdit(a)">Ubah</button>
+          <button class="btn btn-secondary" @click="openProfileModal(a.id)">Profil</button>
+          <button class="btn btn-primary" :disabled="a.status === 'verified' || a.status === 'active'" @click="selected = a; verifySelected()">Verifikasi</button>
+          <button class="btn btn-primary" :disabled="a.status === 'active'" @click="selected = a; activateSelected()">Aktivasi</button>
+        </div>
                   </td>
                 </tr>
                 <tr v-if="!anggota.length">
