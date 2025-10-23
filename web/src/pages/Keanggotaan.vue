@@ -226,6 +226,13 @@ async function loadProfileById(id: number) {
   }
 }
 
+// Modal Profil
+const showProfileModal = ref(false)
+function openProfileModal(id: number) {
+  showProfileModal.value = true
+  loadProfileById(id)
+}
+function closeProfileModal() { showProfileModal.value = false }
 function openProfilePage(id: number) {
   const href = router.resolve({ name: 'keanggotaan-profil', params: { id } }).href
   window.open(href, '_blank')
@@ -445,7 +452,7 @@ watch(() => isProfilePage.value, (isProfile) => {
                   <td>
                     <div class="table-actions" style="display:flex; gap:6px; flex-wrap:wrap;">
                       <button class="btn btn-secondary" @click="openEdit(a)">Ubah</button>
-                      <button class="btn btn-secondary" @click="openProfilePage(a.id)">Profil</button>
+                      <button class="btn btn-secondary" @click="openProfileModal(a.id)">Profil</button>
                       <button class="btn btn-primary" :disabled="a.status === 'verified' || a.status === 'active'" @click="selected = a; verifySelected()">Verifikasi</button>
                       <button class="btn btn-primary" :disabled="a.status === 'active'" @click="selected = a; activateSelected()">Aktivasi</button>
                       <button class="btn btn-light" @click="selection.setAnggota(a.id); router.push('/pinjaman')">Pinjaman</button>
@@ -467,111 +474,93 @@ watch(() => isProfilePage.value, (isProfile) => {
         </div>
       </div>
     </template>
+
+    <!-- Modal Profil -->
+    <div v-if="showProfileModal" class="modal-overlay" @click.self="closeProfileModal">
+      <div class="modal" role="dialog" aria-modal="true" aria-label="Profil Anggota">
+        <div class="modal-header">
+          <h2>Profil Anggota</h2>
+          <button class="close" @click="closeProfileModal" aria-label="Tutup">×</button>
+        </div>
+        <div class="modal-body">
+          <div v-if="profileLoading" class="muted">Memuat profil...</div>
+          <div v-if="profileError" class="card error" style="margin-bottom:12px;">{{ profileError }}</div>
+          <div v-if="!selected && !profileLoading && !profileError" class="card"><p>Data anggota tidak ditemukan.</p></div>
+
+          <div v-if="selected" class="card" style="margin-top: 8px;">
+            <div class="card-header">{{ selected?.nama }} ({{ selected?.nomor_anggota }})</div>
+            <div class="card-content profile-grid">
+              <div>
+                <p><strong>NIK:</strong> {{ selected?.nik }}</p>
+                <p><strong>Alamat:</strong> {{ selected?.alamat || '-' }}</p>
+                <p><strong>Telepon:</strong> {{ selected?.telp || '-' }}</p>
+                <p><strong>Status:</strong> <span class="status-badge" :class="selected?.status">{{ selected?.status }}</span></p>
+                <p><strong>Gabung:</strong> {{ selected?.tanggal_gabung || '-' }}</p>
+              </div>
+              <div>
+                <p class="label" style="margin-bottom: 6px;">Dokumen</p>
+                <ul>
+                  <li v-for="d in documents" :key="d.id">
+                    <a :href="docUrl(d)" target="_blank" rel="noopener noreferrer">{{ d.filename }}</a>
+                  </li>
+                  <li v-if="!documents.length" class="muted">Tidak ada dokumen</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="card" style="margin-top: 16px;">
+            <div class="card-header">Data Peminjaman</div>
+            <div class="card-content">
+              <div v-if="pinjamanError" class="muted" style="margin-bottom:12px;">{{ pinjamanError }}</div>
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Nomor</th>
+                    <th>Tanggal Pengajuan</th>
+                    <th>Nominal</th>
+                    <th>Tenor</th>
+                    <th>Bunga</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="p in pinjaman" :key="p.id">
+                    <td>{{ p.nomor_pinjaman || '-' }}</td>
+                    <td>{{ p.tanggal_pengajuan || '-' }}</td>
+                    <td>{{ new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0}).format(p.nominal || 0) }}</td>
+                    <td>{{ p.tenor_bulan }} bln</td>
+                    <td>{{ p.bunga_persen }}%</td>
+                    <td><span class="status-badge" :class="p.status">{{ p.status }}</span></td>
+                  </tr>
+                  <tr v-if="!pinjaman.length">
+                    <td colspan="6" class="muted">Tidak ada data pinjaman</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" @click="closeProfileModal">Tutup</button>
+          <button class="btn btn-light" @click="router.push('/pinjaman'); closeProfileModal()">Lihat Pinjaman</button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <style scoped>
-/* Actions Row */
-.actions-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  gap: 16px;
-  flex-wrap: wrap;
-}
+/* Modal */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); display:flex; align-items:center; justify-content:center; z-index: 3000; padding: 16px; }
+.modal { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; width: 100%; max-width: 900px; max-height: 90vh; display:flex; flex-direction: column; box-shadow: var(--shadow-lg); }
+.modal-header { display:flex; align-items:center; justify-content:space-between; padding:12px 16px; border-bottom: 1px solid var(--color-border); position: sticky; top: 0; background: inherit; }
+.modal-body { padding: 12px 16px; overflow-y: auto; }
+.modal-footer { display:flex; justify-content:flex-end; gap:8px; padding:12px 16px; border-top: 1px solid var(--color-border); }
+.close { background: transparent; border: none; font-size: 20px; cursor: pointer; }
 
-.search-filters {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-}
-
-.search-input {
-  min-width: 250px;
-}
-
-.status-filter {
-  min-width: 150px;
-}
-
-/* Form Card */
-.form-card {
-  margin-bottom: 20px;
-}
-
-.form-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 16px;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-}
-
-.form-actions {
-  grid-column: 1 / -1;
-  display: flex;
-  gap: 12px;
-  justify-content: flex-start;
-}
-
-/* Table Container */
-.table-container {
-  overflow-x: auto;
-}
-
-/* Profile Grid (untuk halaman profil) */
-.profile-grid { 
-  display: grid; 
-  grid-template-columns: 1fr; 
-  gap: 16px; 
-}
-
-@media (min-width: 768px) { 
-  .profile-grid { 
-    grid-template-columns: 1fr 1fr; 
-  } 
-}
-
-/* Status Badge */
-.status-badge { 
-  padding: 2px 6px; 
-  border-radius: 12px; 
-  font-size: 12px; 
-}
-
-/* Error Card */
-.card.error { 
-  border: 1px solid #e33; 
-  color: #b00; 
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  .actions-row {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  
-  .search-filters {
-    flex-direction: column;
-  }
-  
-  .search-input,
-  .status-filter {
-    min-width: auto;
-    width: 100%;
-  }
-  
-  .form-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .form-actions {
-    flex-direction: column;
-  }
+@media (max-width: 640px) {
+  .modal { max-width: 100%; height: 95vh; }
+  .modal-header, .modal-footer { position: sticky; }
 }
 </style>

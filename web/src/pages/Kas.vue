@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
 import api from '@/lib/axios'
+import { useNotificationsStore } from '@/stores/notifications'
 
 type KasEntry = { id: number; tanggal: string; jenis: 'in' | 'out' | string; keterangan?: string; jumlah: number; ref?: string }
 
@@ -20,15 +21,34 @@ function formatCurrency(n?: number) {
   return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(v)
 }
 
+const notifications = useNotificationsStore()
 async function fetchKas() {
   loading.value = true
   error.value = null
+  notifications.notify({
+    type: 'info',
+    title: 'Memuat data kas',
+    message: 'Mengambil daftar penerimaan/pengeluaran...',
+    timeout: 2500,
+  })
   try {
     const res = await api.get('/api/kas')
     kasList.value = res.data?.data ?? res.data ?? []
+    notifications.notify({
+      type: 'success',
+      title: 'Data kas dimuat',
+      message: `Total entri: ${kasList.value.length}`,
+      timeout: 3000,
+    })
   } catch (e: any) {
     error.value = e?.response?.data?.error || e?.message || 'Gagal memuat data kas'
     kasList.value = []
+    notifications.notify({
+      type: 'error',
+      title: 'Gagal memuat kas',
+      message: error.value ?? 'Terjadi kesalahan',
+      timeout: 6000,
+    })
   } finally {
     loading.value = false
   }
@@ -36,6 +56,13 @@ async function fetchKas() {
 
 async function submitKasIn() {
   if (!kasInForm.jumlah || kasInForm.jumlah <= 0) return alert('Jumlah penerimaan tidak valid')
+  notifications.notify({
+    type: 'info',
+    title: 'Mencatat Kas In',
+    message: `Jumlah: ${formatCurrency(kasInForm.jumlah)}`,
+    detail: `Tanggal: ${kasInForm.tanggal}`,
+    timeout: 3000,
+  })
   try {
     const payload = {
       tanggal: new Date(`${kasInForm.tanggal}T00:00:00`).toISOString(),
@@ -48,15 +75,35 @@ async function submitKasIn() {
       kasInForm.jumlah = 0
       kasInForm.keterangan = ''
       kasInForm.ref = ''
+      notifications.notify({
+        type: 'success',
+        title: 'Kas In berhasil',
+        message: 'Penerimaan kas berhasil dicatat',
+        timeout: 3500,
+      })
       await fetchKas()
     }
   } catch (e: any) {
-    alert(e?.response?.data?.error || e?.message || 'Pencatatan kas-in gagal')
+    const msg = e?.response?.data?.error || e?.message || 'Pencatatan kas-in gagal'
+    notifications.notify({
+      type: 'error',
+      title: 'Kas In gagal',
+      message: msg,
+      timeout: 6000,
+    })
+    alert(msg)
   }
 }
 
 async function submitKasOut() {
   if (!kasOutForm.jumlah || kasOutForm.jumlah <= 0) return alert('Jumlah pengeluaran tidak valid')
+  notifications.notify({
+    type: 'info',
+    title: 'Mencatat Kas Out',
+    message: `Jumlah: ${formatCurrency(kasOutForm.jumlah)}`,
+    detail: `Tanggal: ${kasOutForm.tanggal}`,
+    timeout: 3000,
+  })
   try {
     const payload = {
       tanggal: new Date(`${kasOutForm.tanggal}T00:00:00`).toISOString(),
@@ -69,10 +116,23 @@ async function submitKasOut() {
       kasOutForm.jumlah = 0
       kasOutForm.keterangan = ''
       kasOutForm.ref = ''
+      notifications.notify({
+        type: 'success',
+        title: 'Kas Out berhasil',
+        message: 'Pengeluaran kas berhasil dicatat',
+        timeout: 3500,
+      })
       await fetchKas()
     }
   } catch (e: any) {
-    alert(e?.response?.data?.error || e?.message || 'Pencatatan kas-out gagal')
+    const msg = e?.response?.data?.error || e?.message || 'Pencatatan kas-out gagal'
+    notifications.notify({
+      type: 'error',
+      title: 'Kas Out gagal',
+      message: msg,
+      timeout: 6000,
+    })
+    alert(msg)
   }
 }
 

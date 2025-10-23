@@ -53,7 +53,7 @@ body {
   border-right: 1px solid var(--color-border);
 }
 @media (min-width: 1024px) {
-  .sidebar { display: block; }
+  .sidebar { display: block; position: sticky; top: 0; height: 100vh; overflow-y: auto; align-self: start; }
 }
 .sidebar-header { padding: 16px; border-bottom: 1px solid var(--color-border); }
 .sidebar-content { padding: 8px; }

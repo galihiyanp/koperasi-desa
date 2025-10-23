@@ -16,19 +16,19 @@ const Bantuan = () => import('@/pages/Bantuan.vue')
 
 const routes: RouteRecordRaw[] = [
   { path: '/', redirect: '/dashboard' },
-  { name: 'dashboard', path: '/dashboard', component: Dashboard },
-  { name: 'keanggotaan', path: '/keanggotaan', component: Keanggotaan },
+  { name: 'dashboard', path: '/dashboard', component: Dashboard, meta: { title: 'Dashboard' } },
+  { name: 'keanggotaan', path: '/keanggotaan', component: Keanggotaan, meta: { title: 'Keanggotaan' } },
   // Rute halaman profil anggota menggunakan komponen yang sama
-  { name: 'keanggotaan-profil', path: '/keanggotaan/profil/:id', component: Keanggotaan },
-  { name: 'simpanan', path: '/simpanan', component: Simpanan },
-  { name: 'penarikan', path: '/penarikan', component: Penarikan },
-  { name: 'pinjaman', path: '/pinjaman', component: Pinjaman },
-  { name: 'angsuran', path: '/angsuran', component: Angsuran },
-  { name: 'kas', path: '/kas', component: Kas },
-  { name: 'laporan', path: '/laporan', component: Laporan },
-  { name: 'pengaturan', path: '/pengaturan', component: Pengaturan },
-  { name: 'pengguna', path: '/pengguna', component: UsersSecurity },
-  { name: 'bantuan', path: '/bantuan', component: Bantuan },
+  { name: 'keanggotaan-profil', path: '/keanggotaan/profil/:id', component: Keanggotaan, meta: { title: 'Profil Anggota' } },
+  { name: 'simpanan', path: '/simpanan', component: Simpanan, meta: { title: 'Simpanan' } },
+  { name: 'penarikan', path: '/penarikan', component: Penarikan, meta: { title: 'Penarikan' } },
+  { name: 'pinjaman', path: '/pinjaman', component: Pinjaman, meta: { title: 'Pinjaman' } },
+  { name: 'angsuran', path: '/angsuran', component: Angsuran, meta: { title: 'Angsuran' } },
+  { name: 'kas', path: '/kas', component: Kas, meta: { title: 'Kas & Jurnal' } },
+  { name: 'laporan', path: '/laporan', component: Laporan, meta: { title: 'Laporan' } },
+  { name: 'pengaturan', path: '/pengaturan', component: Pengaturan, meta: { title: 'Pengaturan' } },
+  { name: 'pengguna', path: '/pengguna', component: UsersSecurity, meta: { title: 'Pengguna & Keamanan' } },
+  { name: 'bantuan', path: '/bantuan', component: Bantuan, meta: { title: 'Bantuan' } },
 ]
 
 const router = createRouter({

@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import SidebarMenu from '@/components/SidebarMenu.vue'
 import { RouterView } from 'vue-router'
+import Notifications from '@/components/Notifications.vue'
 
-const appName = import.meta.env.VITE_APP_NAME || 'Sistem Koperasi Kantor Desa'
+const appName = import.meta.env.VITE_APP_NAME || 'Sistem Koperasi Kantor Desa Binangun'
 </script>
 
 <template>
@@ -37,6 +38,7 @@ const appName = import.meta.env.VITE_APP_NAME || 'Sistem Koperasi Kantor Desa'
           <RouterView />
         </transition>
       </main>
+      <Notifications />
     </div>
   </div>
 </template>
